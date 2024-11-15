@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receitas</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container my-5">
+    <h1 class="text-center text-danger mb-4">Receitas de Culinária</h1>
+    <ul id="recipe-list" class="list-group"></ul>
+  </div>
+
+  <script>
+    async function fetchRecipes() {
+      try {
+        const response = await fetch('/api/recipes');
+        const recipes = await response.json();
+
+        const recipeList = document.getElementById('recipe-list');
+        recipes.forEach(recipe => {
+          const listItem = document.createElement('li');
+          listItem.className = "list-group-item";
+          listItem.innerHTML = `<a href="recipe.html?id=${recipe.idMeal}" class="text-danger">${recipe.strMeal}</a>`;
+          recipeList.appendChild(listItem);
+        });
+      } catch (error) {
+        console.error('Erro ao carregar receitas:', error);
+      }
+    }
+
+    fetchRecipes();
+  </script>
+</body>
+</html>

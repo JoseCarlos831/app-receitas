@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes da Receita</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container my-5">
+    <h1 id="recipe-title" class="text-center text-danger mb-4"></h1>
+    <div class="text-center mb-4">
+      <img id="recipe-image" alt="Imagem da receita" class="img-fluid rounded" width="300">
+    </div>
+    <h2 class="text-center text-primary">Ingredientes</h2>
+    <ul id="ingredient-list" class="list-group list-group-flush mb-4"></ul>
+    <h2 class="text-center text-primary">Instruções</h2>
+    <p id="recipe-instructions" class="text-justify"></p>
+    <div class="text-center mt-4">
+      <a href="index.html" class="btn btn-danger">Voltar</a>
+    </div>
+  </div>
+
+  <script>
+    async function fetchRecipeDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const recipeId = urlParams.get('id');
+      
+      try {
+        const response = await fetch(`/api/recipe/${recipeId}`);
+        const recipe = await response.json();
+
+        document.getElementById('recipe-title').textContent = recipe.strMeal;
+        document.getElementById('recipe-image').src = recipe.strMealThumb;
+        document.getElementById('recipe-instructions').textContent = recipe.strInstructions;
+
+        const ingredientList = document.getElementById('ingredient-list');
+        for (let i = 1; i <= 20; i++) {
+          if (recipe[`strIngredient${i}`]) {
+            const listItem = document.createElement('li');
+            listItem.className = "list-group-item";
+            listItem.textContent = `${recipe[`strIngredient${i}`]} - ${recipe[`strMeasure${i}`]}`;
+            ingredientList.appendChild(listItem);
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao carregar detalhes da receita:', error);
+      }
+    }
+
+    fetchRecipeDetails();
+  </script>
+</body>
+</html>
